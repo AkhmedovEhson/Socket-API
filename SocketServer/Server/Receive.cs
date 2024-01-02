@@ -1,8 +1,11 @@
-﻿using SocketServer.Common;
+﻿using Serilog;
+using Serilog.Core;
+using SocketServer.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SocketServer.Server
@@ -11,8 +14,6 @@ namespace SocketServer.Server
     {
         public void Receive(IAsyncResult? result)
         {
-            manualResetEvent.Set();
-            Console.WriteLine("Receive");
             State data = (State)result.AsyncState;
 
             try
@@ -21,8 +22,8 @@ namespace SocketServer.Server
 
                 if (read > 0)
                 {
-                    string message = Encoding.ASCII.GetString(data.buffer, 0, read);
-                    Console.WriteLine($"Received message: '{message}'");
+                    string message = Convert.ToBase64String(data.buffer, 0, read);
+                    Log.Information($"Received message: encrypted -> '{message}' <-> decrypted '{hashing.Decryption(message)}'");
 
                 }
 
@@ -35,7 +36,7 @@ namespace SocketServer.Server
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.Message );
+                Log.Error(e.Message);
             }
 
         }

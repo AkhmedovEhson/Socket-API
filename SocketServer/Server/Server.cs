@@ -1,4 +1,6 @@
-﻿using SocketServer.Common;
+﻿using Serilog;
+using SocketClient.Security;
+using SocketServer.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace SocketServer.Server
     public partial class Server
     {
         private ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        private Hashing hashing = new Hashing();
         public void StartListening()
         {
             const string ip = "127.0.0.1";
@@ -24,12 +27,12 @@ namespace SocketServer.Server
             { 
                 listener.Bind(endpoint);
                 listener.Listen(100);
-                Console.WriteLine("Socket listening on 127.0.0.1:80 tcp/ip");
+                Log.Information("Socket listening on 127.0.0.1:80 tcp/ip");
                 while (running)
                 {
                     manualResetEvent.Reset();
 
-                    Console.WriteLine("Looking for a connection");
+                    Log.Information("Looking for a connection");
            
                     listener.BeginAccept(Accept, listener);
                     
@@ -39,7 +42,7 @@ namespace SocketServer.Server
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex.Message);
                 throw;
             }
         }
