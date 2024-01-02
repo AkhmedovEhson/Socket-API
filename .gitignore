@@ -1,5 +1,7 @@
-/.vs
+/vs
 /SocketServer/bin/
 /SocketServer/obj/
 /SocketClient/bin/
 /SocketClient/obj/
+/Security/bin/
+/Security/obj/
