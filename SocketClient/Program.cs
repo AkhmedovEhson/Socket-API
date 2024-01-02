@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using SocketClient.Security;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -9,6 +10,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var hashing = new Hashing();
 
         const string ip = "127.0.0.1";
         const int port = 8000;
@@ -21,7 +23,8 @@ public class Program
         while (client.Connected)
         {
             Console.WriteLine("Connected");
-            client.Send(Encoding.ASCII.GetBytes("Connected"));
+
+            client.Send(Convert.FromBase64String(hashing.Encryption("Hello")));
             Thread.Sleep(1000);
         }
     }
