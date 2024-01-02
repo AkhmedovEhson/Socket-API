@@ -20,12 +20,21 @@ public class Program
         Socket client = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         client.Connect(endpoint);
+        string? input = string.Empty;
+
+        
         while (client.Connected)
         {
-            Console.WriteLine("Connected");
+            check:
+                Console.Write("~root: ");
+                input = Console.ReadLine();
 
-            client.Send(Convert.FromBase64String(hashing.Encryption("Hello")));
-            Thread.Sleep(1000);
+            if (input == string.Empty)
+            {
+                goto check;
+            }
+
+            client.Send(Convert.FromBase64String(hashing.Encryption(input)));
         }
     }
 }
