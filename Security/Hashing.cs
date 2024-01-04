@@ -1,8 +1,10 @@
 ﻿
 using System.Security.Cryptography;
 using System.Text;
-using Serilog;
 namespace SocketClient.Security;
+/// <summary>
+/// Component `Hashing`, provides bunch of APIs for hashing
+/// </summary>
 public class Hashing
 {
     /// <summary>
@@ -45,16 +47,15 @@ public class Hashing
     /// <returns></returns>
     public string Decryption(string hash)
     {
-        using (Aes aesAlg = Aes.Create())
-        {
-            string response = string.Empty;
-            string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-            string iv = "fedcba9876543210";
-            aesAlg.Key = Encoding.ASCII.GetBytes(key);
-            aesAlg.IV = Encoding.ASCII.GetBytes(iv);
+        using Aes aesAlg = Aes.Create();
+        string response = string.Empty;
+        string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
+        string iv = "fedcba9876543210";
+        aesAlg.Key = Encoding.ASCII.GetBytes(key);
+        aesAlg.IV = Encoding.ASCII.GetBytes(iv);
 
-            try
-            {
+        try
+        {
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
                 using MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(hash));
@@ -63,13 +64,13 @@ public class Hashing
 
                 using StreamReader srDecrypt = new StreamReader(csDecrypt);
                 response = srDecrypt.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-                throw;
-            }
-            return response;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message, ex);
+            throw;
+        }
+
+        return response;
     }
 }
