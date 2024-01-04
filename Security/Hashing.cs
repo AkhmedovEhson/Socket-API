@@ -15,7 +15,7 @@ public class Hashing
     /// <returns></returns>
     public string Encryption(string message)
     {
-        Aes aes = Aes.Create();
+        using Aes aes = Aes.Create();
         string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
         string iv = "fedcba9876543210";
         aes.Key = Encoding.ASCII.GetBytes(key);
