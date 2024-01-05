@@ -35,7 +35,7 @@ public class Hashing
         }
         catch (Exception ex)
         {
-            Log.Information(ex.Message);
+            Log.Error(ex.Message);
             throw;
         }
     }
