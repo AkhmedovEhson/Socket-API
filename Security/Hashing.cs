@@ -30,7 +30,9 @@ public class Hashing
             using CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
 
             using StreamWriter swEncrypt = new StreamWriter(csEncrypt);
+        
             swEncrypt.Write(message);
+            
             return Convert.ToBase64String(msEncrypt.ToArray());
         }
         catch (Exception ex)
@@ -56,14 +58,15 @@ public class Hashing
 
         try
         {
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(hash));
+            using MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(hash));
 
-                using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+            using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
 
-                using StreamReader srDecrypt = new StreamReader(csDecrypt);
-                response = srDecrypt.ReadToEnd();
+            using StreamReader srDecrypt = new StreamReader(csDecrypt);
+            
+            response = srDecrypt.ReadToEnd();
         }
         catch (Exception ex)
         {
