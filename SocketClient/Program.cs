@@ -1,5 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-
 using SocketClient.Security;
 using System.Net;
 using System.Net.NetworkInformation;
