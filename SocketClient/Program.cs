@@ -27,7 +27,7 @@ public class Program
                 Console.Write("~root: ");
                 input = Console.ReadLine();
 
-            if (input == string.Empty)
+            if (string.IsNullOrEmpty(input))
             {
                 goto check;
             }
