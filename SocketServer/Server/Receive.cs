@@ -12,31 +12,36 @@ namespace SocketServer.Server
 {
     public partial class Server
     {
+        /// <summary>
+        /// `Receive` - receives message from connection ( tcp/ip )
+        /// </summary>
+        /// <param name="result"></param>
         public void Receive(IAsyncResult? result)
         {
-            State data = (State)result.AsyncState;
+            State data = (State)result!.AsyncState!;
 
+            // Adjusting the received message </>
             try
             {
                 int read = data.Listener.EndReceive(result);
-
+ 
                 if (read > 0)
                 {
                     string message = Convert.ToBase64String(data.buffer, 0, read);
-                    Log.Information($"Received message: encrypted -> '{message}' <-> decrypted '{hashing.Decryption(message)}'");
-
+                    Log.Information($"Received message: ENCRYPTED:'{message}' <-> DECRYPTED: '{hashing.Decryption(message)}'");
                 }
 
                 data.Listener.BeginReceive(data.buffer,
-                       0,
-                       1024,
-                       0,
-                       new AsyncCallback(Receive), data);
+                       offset:0,
+                       size:1024,
+                       socketFlags:0,
+                       callback:new AsyncCallback(Receive), data);
 
             }
             catch(Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error("Ooops, got exception in receiving message time ....");
+                throw;
             }
 
         }
