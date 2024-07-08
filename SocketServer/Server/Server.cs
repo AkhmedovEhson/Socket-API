@@ -56,7 +56,7 @@ namespace SocketServer.Server
                     manualResetEvent.Reset();
 
                     Log.Information("Looking for a connection");
-
+                    
                     // Starts accepting ANY connection !
                     listener.BeginAccept(Accept, listener);
                     
