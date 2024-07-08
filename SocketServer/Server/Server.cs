@@ -16,11 +16,16 @@ namespace SocketServer.Server
     /// </summary>
     public partial class Server
     {
+        // ManualResetEvent, if you do not know about manualResetEvent || multithreading, please read before looking to it....
         private ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        // Hashing, common self-built component working especially with encrypting messages by ( AES256 ) enc-type....
         private Hashing hashing = new Hashing();
         public void StartListening()
         {
+            // The ip address of server
             const string ip = "127.0.0.1";
+
+            // The port of server
             const int port = 8000;
 
             // Endpoint config, server's IP address and PORT.
@@ -32,7 +37,7 @@ namespace SocketServer.Server
             // Status of current progress of server.
             bool running = true;
 
-            // Note: So, logic of listening and handling next connections .....
+            // Note: So, logic of listening and handling next connections....
             try
             { 
                 // Listener should know about the endpoint.
@@ -43,12 +48,16 @@ namespace SocketServer.Server
 
 
                 Log.Information("Socket listening on 127.0.0.1:80 tcp/ip");
+
+                // Note: Please read about `ManualResetEvent` and multithreading....
+                // Todo: Use logs to capture each action in system....
                 while (running)
                 {
                     manualResetEvent.Reset();
 
                     Log.Information("Looking for a connection");
-           
+
+                    // Starts accepting ANY connection !
                     listener.BeginAccept(Accept, listener);
                     
                     manualResetEvent.WaitOne();
@@ -57,6 +66,7 @@ namespace SocketServer.Server
             }
             catch (Exception ex)
             {
+                // Logging the reason of possible exception while accepting connection....
                 Log.Error(ex.Message);
                 throw;
             }
