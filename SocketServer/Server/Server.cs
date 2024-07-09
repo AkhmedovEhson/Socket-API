@@ -43,7 +43,7 @@ namespace SocketServer.Server
                 // Listener should know about the endpoint.
                 listener.Bind(endpoint);
 
-                // The size of connectors
+                // The limit how many connectors can listen.
                 listener.Listen(100);
 
 
