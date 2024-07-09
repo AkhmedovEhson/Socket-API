@@ -1,5 +1,5 @@
 # Socket-API
-✨💬 Welcome to simple Console Application :).
+✨💬 Welcome to simple chat application inside of console.
 
 # Config, and instruments
 * 🌱 TCP/IP - protocol, communication between client and server.
