@@ -17,30 +17,21 @@ public class Hashing
     public string Encryption(string message)
     {
         using Aes aes = Aes.Create();
-        string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        string iv = "fedcba9876543210";
+        string key = "0123456789abcdef0123456789abcdef"; // 256-bit key (32 characters)
+        string iv = "fedcba9876543210"; // 128-bit IV (16 characters)
         aes.Key = Encoding.ASCII.GetBytes(key);
         aes.IV = Encoding.ASCII.GetBytes(iv);
 
-        try
+        using MemoryStream msEncrypt = new MemoryStream();
+        using CryptoStream csEncrypt = new CryptoStream(msEncrypt, aes.CreateEncryptor(), CryptoStreamMode.Write);
+        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
         {
-            var encryptor = aes.CreateEncryptor();
-
-            using MemoryStream msEncrypt = new MemoryStream();
-
-            using CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-
-            using StreamWriter swEncrypt = new StreamWriter(csEncrypt);
-        
+            // Write the message to the CryptoStream
             swEncrypt.Write(message);
-            
-            return Encoding.UTF8.GetString(msEncrypt.ToArray());
         }
-        catch (Exception ex)
-        {
-            Log.Error(ex.Message);
-            throw;
-        }
+
+        // At this point, the streams are flushed and disposed
+        return Convert.ToBase64String(msEncrypt.ToArray());
     }
     /// <summary>
     /// Decrypts AES encrypion using specified ( secret key ), else throws `<seealso cref="Exception"/>`
@@ -52,26 +43,24 @@ public class Hashing
     {
         using Aes aesAlg = Aes.Create();
         string response = string.Empty;
-        string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        string iv = "fedcba9876543210";
+        string key = "0123456789abcdef0123456789abcdef"; // 256-bit key (32 characters)
+        string iv = "fedcba9876543210"; // 128-bit IV (16 characters)
         aesAlg.Key = Encoding.ASCII.GetBytes(key);
         aesAlg.IV = Encoding.ASCII.GetBytes(iv);
 
         try
         {
-            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            using MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(hash));
 
-            using MemoryStream msDecrypt = new MemoryStream(Encoding.UTF8.GetBytes(hash));
-
-            using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+            using CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Read);
 
             using StreamReader srDecrypt = new StreamReader(csDecrypt);
-            
+
             response = srDecrypt.ReadToEnd();
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+
             throw;
         }
 
