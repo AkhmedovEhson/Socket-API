@@ -1,6 +1,7 @@
 ﻿
 using System.Security.Cryptography;
 using System.Text;
+using Serilog;
 namespace SocketClient.Security;
 /// <summary>
 /// Component `Hashing`, provides bunch of APIs for hashing
@@ -33,7 +34,7 @@ public class Hashing
         
             swEncrypt.Write(message);
             
-            return Convert.ToBase64String(msEncrypt.ToArray());
+            return Encoding.UTF8.GetString(msEncrypt.ToArray());
         }
         catch (Exception ex)
         {
@@ -60,7 +61,7 @@ public class Hashing
         {
             ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-            using MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(hash));
+            using MemoryStream msDecrypt = new MemoryStream(Encoding.UTF8.GetBytes(hash));
 
             using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
 

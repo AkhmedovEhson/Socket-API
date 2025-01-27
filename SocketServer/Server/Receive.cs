@@ -27,8 +27,8 @@ namespace SocketServer.Server
  
                 if (read > 0)
                 {
-                    string message = Convert.ToBase64String(data.buffer, 0, read);
-                    Log.Information($"Received message: ENCRYPTED:'{message}' <-> DECRYPTED: '{hashing.Decryption(message)}'");
+                    string message = Encoding.UTF8.GetString(data.buffer, 0, read);
+                    Log.Information($"Received from client: {message}");
                 }
 
                 data.Listener.BeginReceive(data.buffer,

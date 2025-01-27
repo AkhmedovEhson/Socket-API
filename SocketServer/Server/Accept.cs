@@ -1,4 +1,5 @@
-﻿using SocketServer.Common;
+﻿using Serilog;
+using SocketServer.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace SocketServer.Server
                 offset:0,
                 size:1024,
                 socketFlags:0,
-                callback:new AsyncCallback(Receive),
+                callback:Receive,
                 state);
         }
     }
