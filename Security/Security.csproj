@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="4.2.1-dev-02337" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
   </ItemGroup>
 
 </Project>

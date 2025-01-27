@@ -1,6 +1,9 @@
 ﻿
 using System.Security.Cryptography;
 using System.Text;
+using Security;
+using Security.Configurations;
+using Security.Dtos;
 using Serilog;
 namespace SocketClient.Security;
 /// <summary>
@@ -8,6 +11,7 @@ namespace SocketClient.Security;
 /// </summary>
 public class Hashing
 {
+    private Configuration Configuration = new Configuration(Constants.BasePath, "appsettings.json");
     /// <summary>
     /// Symmetric encryption, encrypts message with specific ( secretkey ) else throws `<seealso cref="Exception"/>`
     /// </summary>
@@ -17,8 +21,11 @@ public class Hashing
     public string Encryption(string message)
     {
         using Aes aes = Aes.Create();
-        string key = "0123456789abcdef0123456789abcdef"; // 256-bit key (32 characters)
-        string iv = "fedcba9876543210"; // 128-bit IV (16 characters)
+        var obj = Configuration.GetObject<SecurityModel>();
+
+        string key = obj.Security.Aes.Key;
+        string iv = obj.Security.Aes.Iv; 
+
         aes.Key = Encoding.ASCII.GetBytes(key);
         aes.IV = Encoding.ASCII.GetBytes(iv);
 
@@ -42,9 +49,12 @@ public class Hashing
     public string Decryption(string hash)
     {
         using Aes aesAlg = Aes.Create();
+        var obj = Configuration.GetObject<SecurityModel>();
+
         string response = string.Empty;
-        string key = "0123456789abcdef0123456789abcdef"; // 256-bit key (32 characters)
-        string iv = "fedcba9876543210"; // 128-bit IV (16 characters)
+        string key = obj.Security.Aes.Key;
+        string iv = obj.Security.Aes.Iv; 
+
         aesAlg.Key = Encoding.ASCII.GetBytes(key);
         aesAlg.IV = Encoding.ASCII.GetBytes(iv);
 
