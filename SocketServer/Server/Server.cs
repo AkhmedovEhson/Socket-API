@@ -23,8 +23,8 @@ namespace SocketServer.Server
             const string ip = "127.0.0.1";
             const int port = 8000;
 
-            IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            Socket listener = new Socket(endpoint.AddressFamily,SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint endpoint = new(IPAddress.Parse(ip), port);
+            Socket listener = new(endpoint.AddressFamily,SocketType.Stream, ProtocolType.Tcp);
             bool running = true;
             try
             { 
