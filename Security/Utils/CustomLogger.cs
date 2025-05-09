@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using Security.Utils;
+using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
@@ -10,31 +12,56 @@ namespace Security.Utils
 {
     public static class CustomLogger
     {
-        public static ILogger Logger
+        public static ICustomLogger Logger
         {
-            get => _logger ?? throw new NullReferenceException("_logger is not registered !");
+            get
+            {
+                return _logger ?? throw new NullReferenceException("_logger is not registered !");
+            }
             set
             {
-                _logger = value;
+               
+                _logger ??= value;
             }
         }
 
-        private static ILogger? _logger;
+        private static ICustomLogger? _logger;
 
-        public static void Information(string method, string text)
+    }
+
+    public class CLogger : ICustomLogger
+    {
+
+        private readonly ILogger _logger;
+
+
+        public CLogger(ILogger logger)
         {
-            Logger.Information($"[{method}]: {text}");
+            _logger = logger;
         }
-        
 
-        public static void Warning(string method, string text)
+        public void Information(string method, string text)
         {
-            Logger.Warning($"[{method}]: {text}");
+            _logger.Information($"[{method}]: {text}");
         }
 
-        public static void Error(string method, string text)
+
+        public void Warning(string method, string text)
         {
-            Logger.Error($"[{method}]: {text}");
+            _logger.Warning($"[{method}]: {text}");
+        }
+
+        public void Error(string method, string text)
+        {
+            _logger.Error($"[{method}]: {text}");
+        }
+
+        public void Write(LogEvent logEvent)
+        {
+            _logger.Write(logEvent);
         }
     }
+
 }
+
+

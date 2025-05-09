@@ -30,12 +30,13 @@ namespace SocketServer.Server
             { 
                 listener.Bind(endpoint);
                 listener.Listen(100);
-                Log.Information("Socket listening on 127.0.0.1:80 tcp/ip");
+                Logger.Information(nameof(StartListening), "Socket listening on 127.0.0.1:80 tcp/ip");
+                
                 while (running)
                 {
                     manualResetEvent.Reset();
 
-                    Log.Information("Looking for a connection");
+                    Logger.Information(nameof(StartListening), "Looking for a connection");
 
                     manualResetEvent.WaitOne();
                     listener.BeginAccept(Accept, listener);

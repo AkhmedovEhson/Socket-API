@@ -3,10 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Security.Utils;
 
-
-
-
-
 namespace SocketClient.Security;
 using static CustomLogger;
 /// <summary>
