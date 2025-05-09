@@ -15,7 +15,7 @@ namespace SocketServer.Server
     using static CustomLogger;
     public partial class Server
     {
-        private ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        private Semaphore _semaphore = new(1,1);
         private Hashing hashing = new();
 
         public async Task StartListening()
@@ -34,13 +34,10 @@ namespace SocketServer.Server
                 
                 while (running)
                 {
-                    manualResetEvent.Reset();
-
+                    _semaphore.WaitOne();
                     Logger.Information(nameof(StartListening), "Looking for a connection");
-
-                    manualResetEvent.WaitOne();
-                    listener.BeginAccept(Accept, listener);
                
+                    listener.BeginAccept(Accept, listener);                    
                 }
             }
             catch (Exception ex)
