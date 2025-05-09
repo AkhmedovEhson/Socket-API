@@ -1,6 +1,8 @@
 ﻿
 using System.Security.Cryptography;
 using System.Text;
+using Security.Configurations;
+using Security.Dtos;
 using Security.Utils;
 
 namespace SocketClient.Security;
@@ -10,6 +12,9 @@ using static CustomLogger;
 /// </summary>
 public class Hashing
 {
+
+    private Configuration Configuration { get; set; } = new Configuration(Directory.GetCurrentDirectory());
+
     /// <summary>
     /// Symmetric encryption, encrypts message with specific ( secretkey ) else throws `<seealso cref="Exception"/>`
     /// </summary>
@@ -19,9 +24,11 @@ public class Hashing
     public string Encryption(string message)
     {
         using Aes aes = Aes.Create();
+        var obj = Configuration.GetObject<SecurityModel>();
 
-        const string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        const string iv = "fedcba9876543210";
+
+        string key = obj.Security.Aes.Key; 
+        string iv = obj.Security.Aes.Iv;
 
         aes.Key = Encoding.ASCII.GetBytes(key);
         aes.IV = Encoding.ASCII.GetBytes(iv);
@@ -57,8 +64,9 @@ public class Hashing
         using Aes aesAlg = Aes.Create();
         string response = string.Empty;
 
-        const string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        const string iv = "fedcba9876543210";
+        var obj = Configuration.GetObject<SecurityModel>();
+        string key = obj.Security.Aes.Key; 
+        string iv = obj.Security.Aes.Iv;
 
         aesAlg.Key = Encoding.ASCII.GetBytes(key);
         aesAlg.IV = Encoding.ASCII.GetBytes(iv);
