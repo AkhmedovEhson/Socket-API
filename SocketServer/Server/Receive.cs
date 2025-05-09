@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SocketServer.Server
 {
+    using static Security.Utils.CustomLogger;
     public partial class Server
     {
         public void Receive(IAsyncResult? result)
@@ -23,7 +24,7 @@ namespace SocketServer.Server
                 if (read > 0)
                 {
                     string message = Convert.ToBase64String(data.buffer, 0, read);
-                    Log.Information($"Received message: encrypted -> '{message}' <-> decrypted '{hashing.Decryption(message)}'");
+                    Logger.Information(nameof(Receive),$"Received message: encrypted -> '{message}' <-> decrypted '{hashing.Decryption(message)}'");
 
                 }
 
@@ -36,7 +37,7 @@ namespace SocketServer.Server
             }
             catch(Exception e)
             {
-                Log.Error(e.Message);
+                Logger.Error(nameof(Receive),e.Message);
             }
 
         }

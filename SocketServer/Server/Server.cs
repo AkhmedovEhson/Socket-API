@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Security.Utils;
+using Serilog;
 using SocketClient.Security;
 using SocketServer.Common;
 using System;
@@ -11,11 +12,13 @@ using System.Threading.Tasks;
 
 namespace SocketServer.Server
 {
+    using static CustomLogger;
     public partial class Server
     {
         private ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-        private Hashing hashing = new Hashing();
-        public void StartListening()
+        private Hashing hashing = new();
+
+        public async Task StartListening()
         {
             const string ip = "127.0.0.1";
             const int port = 8000;
@@ -33,16 +36,15 @@ namespace SocketServer.Server
                     manualResetEvent.Reset();
 
                     Log.Information("Looking for a connection");
-           
-                    listener.BeginAccept(Accept, listener);
-                    
+
                     manualResetEvent.WaitOne();
+                    listener.BeginAccept(Accept, listener);
                
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Logger.Error(nameof(StartListening),ex.Message);
                 throw;
             }
         }

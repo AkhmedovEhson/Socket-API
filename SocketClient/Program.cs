@@ -1,3 +1,5 @@
+using Security.Utils;
+using Serilog;
 using SocketClient.Security;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -26,6 +28,7 @@ public class Program
             check:
                 Console.Write("~root: ");
                 input = Console.ReadLine();
+                
 
             if (input == string.Empty)
             {

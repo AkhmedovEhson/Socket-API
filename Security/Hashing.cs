@@ -1,7 +1,14 @@
 ﻿
 using System.Security.Cryptography;
 using System.Text;
+using Security.Utils;
+
+
+
+
+
 namespace SocketClient.Security;
+using static CustomLogger;
 /// <summary>
 /// Component `Hashing`, provides bunch of APIs for hashing
 /// </summary>
@@ -16,8 +23,10 @@ public class Hashing
     public string Encryption(string message)
     {
         using Aes aes = Aes.Create();
-        string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        string iv = "fedcba9876543210";
+
+        const string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
+        const string iv = "fedcba9876543210";
+
         aes.Key = Encoding.ASCII.GetBytes(key);
         aes.IV = Encoding.ASCII.GetBytes(iv);
 
@@ -25,19 +34,19 @@ public class Hashing
         {
             var encryptor = aes.CreateEncryptor();
 
-            using MemoryStream msEncrypt = new MemoryStream();
+            using MemoryStream msEncrypt = new();
 
-            using CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+            using CryptoStream csEncrypt = new(msEncrypt, encryptor, CryptoStreamMode.Write);
 
-            using StreamWriter swEncrypt = new StreamWriter(csEncrypt);
-        
-            swEncrypt.Write(message);
-            
+            using (StreamWriter swEncrypt = new(csEncrypt))
+            {
+                swEncrypt.Write(message);
+            }           
             return Convert.ToBase64String(msEncrypt.ToArray());
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message);
+            Logger.Information(nameof(Encryption),ex.Message);
             throw;
         }
     }
@@ -51,8 +60,10 @@ public class Hashing
     {
         using Aes aesAlg = Aes.Create();
         string response = string.Empty;
-        string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
-        string iv = "fedcba9876543210";
+
+        const string key = "0123456789abcdef0123456789abcdeg"; // 256-bit key
+        const string iv = "fedcba9876543210";
+
         aesAlg.Key = Encoding.ASCII.GetBytes(key);
         aesAlg.IV = Encoding.ASCII.GetBytes(iv);
 
@@ -64,13 +75,15 @@ public class Hashing
 
             using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
 
-            using StreamReader srDecrypt = new StreamReader(csDecrypt);
+            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+            {
+                response = srDecrypt.ReadToEnd();
+            }
             
-            response = srDecrypt.ReadToEnd();
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Logger.Information(nameof(Decryption),ex.Message);
             throw;
         }
 
