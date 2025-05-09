@@ -4,12 +4,17 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using SocketServer.Server;
 using Serilog.Sinks.SystemConsole;
+using Security.Utils;
 public class Program
 {
     private static void LoggerConfigurations()
     {
         Log.Logger = new LoggerConfiguration().WriteTo
                 .Console().CreateLogger();
+
+        CustomLogger.Logger = Log.Logger;
+
+      
     }
     public static void Main(string[] args)
     {
