@@ -29,16 +29,11 @@ namespace Security.Utils
 
     }
 
-    public class CLogger : ICustomLogger
+    public class CLogger(ILogger logger) : ICustomLogger
     {
 
-        private readonly ILogger _logger;
+        private readonly ILogger _logger = logger;
 
-
-        public CLogger(ILogger logger)
-        {
-            _logger = logger;
-        }
 
         public void Information(string method, string text)
         {

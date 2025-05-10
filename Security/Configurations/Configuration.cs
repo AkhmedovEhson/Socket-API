@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace Security.Configurations
 {
-    public class Configuration
+    public class Configuration(string path,string? filename)
     {
-        private string _file = string.Empty;
-
-        public Configuration(string path, string? filename)
-        {
-            _file = File.ReadAllText(Path.Combine(path, filename ?? "appsettings.json"));
-        }
+        private readonly string _file = File.ReadAllText(Path.Combine(path, filename ?? "appsettings.json"));
 
         public Configuration(string path) : this(path, null)
         { }
