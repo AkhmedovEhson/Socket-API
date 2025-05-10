@@ -16,6 +16,6 @@ public class Program
         LoggerConfigurations();
 
         var _ = new Server(); // Server 
-        await _.StartListening();
+        _.StartListening();
     }
 }

@@ -18,7 +18,7 @@ namespace SocketServer.Server
         private Semaphore _semaphore = new(1,1);
         private Hashing hashing = new();
 
-        public async Task StartListening()
+        public void StartListening()
         {
             const string ip = "127.0.0.1";
             const int port = 8000;
